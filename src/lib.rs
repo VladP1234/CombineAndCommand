@@ -1,5 +1,7 @@
 use bevy::ecs::schedule::States;
 use bevy::prelude::*;
+pub mod map;
+pub use map::*;
 #[derive(Debug, Clone, Eq, PartialEq, Hash, States, Default, Reflect)]
 pub enum GameState {
     #[default]

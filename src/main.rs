@@ -1,7 +1,7 @@
 use bevy::log::Level;
 use bevy::log::LogPlugin;
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_inspector_egui::quick::{StateInspectorPlugin, WorldInspectorPlugin};
 use combine_and_command::*;
 
 fn main() {
@@ -18,8 +18,10 @@ fn main() {
                 },
             ),
             StartupPlugin,
+            MapPlugin,
             // Debug stuff
             WorldInspectorPlugin::new(),
+            StateInspectorPlugin::<GameState>::default(),
         ))
         .run();
 }
