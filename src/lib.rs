@@ -15,6 +15,7 @@ pub enum GameState {
 pub const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
 pub const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
 pub const PRESSED_BUTTON: Color = Color::rgb(0.55, 0.55, 0.55);
+pub const START_TILE: (i32, i32) = (2, 8);
 
 #[derive(Component, Reflect)]
 pub struct CustomButton {
