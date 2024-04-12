@@ -2,6 +2,10 @@ use bevy::ecs::schedule::States;
 use bevy::prelude::*;
 pub mod map;
 pub use map::*;
+pub mod combat;
+pub use combat::*;
+pub mod card;
+pub use card::*;
 #[derive(Debug, Clone, Eq, PartialEq, Hash, States, Default, Reflect)]
 pub enum GameState {
     #[default]

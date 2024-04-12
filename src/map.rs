@@ -133,7 +133,7 @@ fn spawn_tile(
 ) {
     let bundle = SpriteBundle {
         sprite: Sprite {
-            color: Color::GRAY,
+            color: Color::DARK_GRAY,
             custom_size: Some(Vec2::new(100., 100.)),
             ..default()
         },
@@ -145,6 +145,11 @@ fn spawn_tile(
     let c_tile = spawning_tile.clone();
     for start_tile in start_tiles {
         if current_tile == start_tile {
+            tile.insert(Sprite {
+                color: Color::GRAY,
+                custom_size: Some(Vec2::new(100., 100.)),
+                ..default()
+            });
             tile.insert(PickableBundle::default());
             tile.insert(On::<Pointer<Click>>::run(
                 move |mut next_state: ResMut<NextState<GameState>>,
@@ -155,7 +160,6 @@ fn spawn_tile(
             ));
             tile.insert(On::<Pointer<Over>>::target_component_mut::<Sprite>(
                 |_, sprite| {
-                    // debug!("{}", sprite.color.l())
                     sprite.color.set_l(1.);
                 },
             ));

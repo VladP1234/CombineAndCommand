@@ -23,6 +23,7 @@ fn main() {
             StartupPlugin,
             MapPlugin,
             DefaultPickingPlugins,
+            CombatPlugin,
             // Debug stuff
             WorldInspectorPlugin::new(),
             StateInspectorPlugin::<GameState>::default(),
