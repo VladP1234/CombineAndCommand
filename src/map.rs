@@ -109,7 +109,8 @@ fn generate_map(mut commands: Commands, opt_map_manager: Option<ResMut<MapManage
                         .with_rotation(Quat::from_rotation_z(angle)),
                     ..Default::default()
                 })
-                .insert(MapThing);
+                .insert(MapThing)
+                .insert(Name::new("Connecting Rod"));
             if !generated_tiles.contains(&end_tile) {
                 spawn_tile(
                     &mut commands,
@@ -140,7 +141,8 @@ fn spawn_tile(
         transform: Transform::from_xyz(pos.0, pos.1, 0.),
         ..Default::default()
     };
-    let spawn = &mut commands.spawn(bundle);
+    let mut binding = commands.spawn(bundle);
+    let spawn = &mut binding.insert(Name::new("Encounter"));
     let tile = spawn.insert(MapThing);
     let c_tile = spawning_tile.clone();
     for start_tile in start_tiles {

@@ -151,7 +151,8 @@ fn spawn_unit(commands: &mut Commands, unit: Unit, is_friendly: bool, attack: At
                     transform: Transform::from_xyz(0., 75., 0.),
                     ..default()
                 })
-                .insert(UnitTextMarker::Countdown);
+                .insert(UnitTextMarker::Countdown)
+                .insert(Name::new("Attack Countdown"));
             // Hp
             parent
                 .spawn(Text2dBundle {
@@ -166,7 +167,8 @@ fn spawn_unit(commands: &mut Commands, unit: Unit, is_friendly: bool, attack: At
                     transform: Transform::from_xyz(-45., -65., 0.),
                     ..default()
                 })
-                .insert(UnitTextMarker::Hp);
+                .insert(UnitTextMarker::Hp)
+                .insert(Name::new("HP"));
             // Damage
             parent
                 .spawn(Text2dBundle {
@@ -181,7 +183,8 @@ fn spawn_unit(commands: &mut Commands, unit: Unit, is_friendly: bool, attack: At
                     transform: Transform::from_xyz(45., -65., 0.),
                     ..default()
                 })
-                .insert(UnitTextMarker::Damage);
+                .insert(UnitTextMarker::Damage)
+                .insert(Name::new("Damage"));
         });
 
     if is_friendly {
@@ -189,7 +192,7 @@ fn spawn_unit(commands: &mut Commands, unit: Unit, is_friendly: bool, attack: At
     }
 }
 
-fn make_card(commands: &mut Commands, card: Card) -> Entity {
+fn make_card(commands: &mut Commands, card: &Card) -> Entity {
     let mut binding = commands.spawn(ButtonBundle {
         style: Style {
             width: Val::Percent(12.5),
@@ -206,13 +209,14 @@ fn make_card(commands: &mut Commands, card: Card) -> Entity {
     });
     let card = binding
         .insert(CombatThing)
-        .insert(CombatButtonType::Card(card))
+        .insert(CombatButtonType::Card(card.clone()))
         .insert(CustomButton::new(
             "".to_string(),
             "".to_string(),
             "Pick a Target".to_string(),
             true,
         ))
+        .insert(Name::new("Card"))
         .with_children(|parent| {
             parent.spawn(TextBundle::from_section(
                 "",
@@ -231,7 +235,6 @@ fn spawn_stuff(mut commands: Commands) {
     deck.push(Card::new(Target::Enemy, Effect::BonusDamage(-2), 1));
     deck.push(Card::new(Target::Enemy, Effect::BonusHealth(-2), 1));
     deck.push(Card::new(Target::Enemy, Effect::BonusCountdown(1), 1));
-    commands.insert_resource(CombatManager::new(deck, 3));
     spawn_unit(
         &mut commands,
         Unit::new(10, (0, 0)),
@@ -244,22 +247,12 @@ fn spawn_stuff(mut commands: Commands) {
         false,
         Attack::new(1, 1),
     );
-    let card1 = make_card(
-        &mut commands,
-        Card::new(Target::Enemy, Effect::BonusHealth(-2), 1),
-    );
-    let card2 = make_card(
-        &mut commands,
-        Card::new(Target::Player, Effect::BonusDamage(2), 1),
-    );
-    let card3 = make_card(
-        &mut commands,
-        Card::new(Target::Player, Effect::BonusCountdown(-1), 1),
-    );
     let mut starter_cards: Vec<Entity> = Vec::new();
-    starter_cards.push(card1);
-    starter_cards.push(card2);
-    starter_cards.push(card3);
+    for card in &deck {
+        let card_id = make_card(&mut commands, card);
+        starter_cards.push(card_id);
+    }
+    commands.insert_resource(CombatManager::new(deck, 3));
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -270,10 +263,11 @@ fn spawn_stuff(mut commands: Commands) {
                 top: Val::Percent(70.0),
                 ..default()
             },
-            background_color: Color::rgba(0., 0.1, 0.1, 0.1).into(),
+            background_color: Color::rgba(0., 0., 0., 0.).into(),
             ..default()
         })
         .insert(CombatThing)
+        .insert(Name::new("Hand Node"))
         .insert_children(0, &starter_cards);
 
     commands
@@ -290,6 +284,7 @@ fn spawn_stuff(mut commands: Commands) {
             },
             ..default()
         })
+        .insert(Name::new("End Turn Node"))
         .with_children(|parent| {
             parent
                 .spawn(ButtonBundle {
@@ -307,6 +302,7 @@ fn spawn_stuff(mut commands: Commands) {
                     ..default()
                 })
                 .insert(CombatThing)
+                .insert(Name::new("End Turn Button"))
                 .insert(CombatButtonType::EndTurn)
                 .insert(CustomButton::new(
                     "End Turn".to_string(),
@@ -584,7 +580,7 @@ fn spawn_button_on_unit(
             ..default()
         })
         .insert(CombatThing)
-        // .insert(Name::new("Test Button"))
+        .insert(Name::new("Target Picker"))
         .insert(CombatButtonType::UnitSelector(selected_entity))
         .insert(CustomButton::new(
             "".to_string(),
