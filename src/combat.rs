@@ -40,17 +40,23 @@ pub struct CombatManager {
     remaining_energy: i32,
     max_energy: i32,
     selected_card: Option<(Card, Entity)>,
+    hand_node: Entity,
     deck: Vec<Card>,
+    draw_pile: Vec<Card>,
+    discard_pile: Vec<Card>,
 }
 
 impl CombatManager {
-    fn new(deck: Vec<Card>, energy: i32) -> CombatManager {
+    fn new(deck: Vec<Card>, energy: i32, hand_node: Entity) -> CombatManager {
         CombatManager {
             turn: Turn::Player,
             remaining_energy: energy,
             max_energy: energy,
             selected_card: None,
-            deck,
+            hand_node,
+            deck: deck.clone(),
+            draw_pile: deck,
+            discard_pile: Vec::new(),
         }
     }
 }
@@ -211,30 +217,54 @@ fn make_card(commands: &mut Commands, card: &Card) -> Entity {
         .insert(CombatThing)
         .insert(CombatButtonType::Card(card.clone()))
         .insert(CustomButton::new(
-            "".to_string(),
-            "".to_string(),
+            format!("{}", card.description).to_string(),
+            format!("{}", card.description).to_string(),
             "Pick a Target".to_string(),
             true,
         ))
         .insert(Name::new("Card"))
         .with_children(|parent| {
-            parent.spawn(TextBundle::from_section(
-                "",
-                TextStyle {
-                    font_size: 40.0,
-                    color: Color::rgb(0.9, 0.9, 0.9),
+            parent.spawn(TextBundle {
+                text: Text::from_section(
+                    "",
+                    TextStyle {
+                        font_size: 20.0,
+                        color: Color::rgb(0.9, 0.9, 0.9),
+                        ..default()
+                    },
+                )
+                .with_alignment(TextAlignment::Center),
+                style: Style {
+                    align_self: AlignSelf::End,
+                    height: Val::Percent(70.),
                     ..default()
                 },
-            ));
+                ..default()
+            });
         });
     card.id()
 }
 
 fn spawn_stuff(mut commands: Commands) {
     let mut deck: Vec<Card> = Vec::new();
-    deck.push(Card::new(Target::Enemy, Effect::BonusDamage(-2), 1));
-    deck.push(Card::new(Target::Enemy, Effect::BonusHealth(-2), 1));
-    deck.push(Card::new(Target::Enemy, Effect::BonusCountdown(1), 1));
+    deck.push(Card::new(
+        Target::Enemy,
+        Effect::BonusDamage(-2),
+        1,
+        "Decrease the attack of an enemy by 2".into(),
+    ));
+    deck.push(Card::new(
+        Target::Enemy,
+        Effect::BonusHealth(-2),
+        1,
+        "Deal 2 damage to an enemy".into(),
+    ));
+    deck.push(Card::new(
+        Target::Enemy,
+        Effect::BonusCountdown(1),
+        1,
+        "Increase the countdown of an enemy by 1".into(),
+    ));
     spawn_unit(
         &mut commands,
         Unit::new(10, (0, 0)),
@@ -252,8 +282,7 @@ fn spawn_stuff(mut commands: Commands) {
         let card_id = make_card(&mut commands, card);
         starter_cards.push(card_id);
     }
-    commands.insert_resource(CombatManager::new(deck, 3));
-    commands
+    let hand_node: Entity = commands
         .spawn(NodeBundle {
             style: Style {
                 width: Val::Percent(80.0),
@@ -268,7 +297,10 @@ fn spawn_stuff(mut commands: Commands) {
         })
         .insert(CombatThing)
         .insert(Name::new("Hand Node"))
-        .insert_children(0, &starter_cards);
+        .insert_children(0, &starter_cards)
+        .id();
+
+    commands.insert_resource(CombatManager::new(deck, 3, hand_node));
 
     commands
         .spawn(NodeBundle {
@@ -395,7 +427,9 @@ fn button_system(
                                 if let Some((ref card, entity)) = cb_manager.selected_card {
                                     cost = card.cost;
                                     match card.effect {
-                                        Effect::BonusDamage(damage) => attack.damage += damage,
+                                        Effect::BonusDamage(damage) => {
+                                            attack.damage = (attack.damage + damage).max(0);
+                                        }
                                         Effect::BonusHealth(health) => unit.hp += health,
                                         Effect::BonusCountdown(countdown) => {
                                             attack.remaining_turns += countdown

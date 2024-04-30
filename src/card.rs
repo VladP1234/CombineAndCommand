@@ -18,14 +18,16 @@ pub struct Card {
     pub target: Target,
     pub effect: Effect,
     pub cost: i32,
+    pub description: String,
 }
 
 impl Card {
-    pub fn new(target: Target, effect: Effect, cost: i32) -> Card {
+    pub fn new(target: Target, effect: Effect, cost: i32, description: String) -> Card {
         Card {
             target,
             effect,
             cost,
+            description,
         }
     }
 }
