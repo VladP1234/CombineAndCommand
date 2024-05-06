@@ -28,6 +28,7 @@ fn main() {
             WorldInspectorPlugin::new(),
             StateInspectorPlugin::<GameState>::default(),
             ResourceInspectorPlugin::<MapManager>::default(),
+            ResourceInspectorPlugin::<CombatManager>::default(),
         ))
         .register_type::<MapManager>()
         .run();
