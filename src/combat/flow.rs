@@ -2,24 +2,9 @@ use crate::*;
 
 pub fn spawn_stuff(mut commands: Commands) {
     let mut deck: Vec<Card> = Vec::new();
-    deck.push(Card::new(
-        Target::Enemy,
-        Effect::BonusDamage(-2),
-        1,
-        "Decrease the attack of an enemy by 2".into(),
-    ));
-    deck.push(Card::new(
-        Target::Enemy,
-        Effect::BonusHealth(-2),
-        1,
-        "Deal 2 damage to an enemy".into(),
-    ));
-    deck.push(Card::new(
-        Target::Enemy,
-        Effect::BonusCountdown(1),
-        1,
-        "Increase the countdown of an enemy by 1".into(),
-    ));
+    deck.push(Card::new(Effect::BonusDamage(-2), 1));
+    deck.push(Card::new(Effect::BonusHealth(-2), 1));
+    deck.push(Card::new(Effect::BonusCountdown(1), 1));
     spawn_unit(
         &mut commands,
         Unit::new(10, (0, 0)),
@@ -223,8 +208,7 @@ pub fn handle_end_of_turn(
         if let Some(drawn_card) = attempted_drawn_card {
             let card_entity = make_card(&mut commands, &drawn_card);
             commands
-                .get_entity(cb_manager.hand_node)
-                .unwrap()
+                .entity(cb_manager.hand_node)
                 .insert_children(0, &[card_entity]);
         }
     }

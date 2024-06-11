@@ -2,11 +2,13 @@ use bevy::ecs::schedule::States;
 use bevy::prelude::*;
 pub mod map;
 pub use map::*;
+pub mod rest_sites;
+pub use rest_sites::*;
 pub mod combat;
 pub use combat::*;
 pub mod card;
 pub use card::*;
-#[derive(Debug, Clone, Eq, PartialEq, Hash, States, Default, Reflect)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, States, Default, Reflect)]
 pub enum GameState {
     #[default]
     HomeBase,
@@ -30,7 +32,6 @@ pub struct CustomButton {
     pressed_text: String,
 }
 
-#[allow(dead_code)]
 impl CustomButton {
     fn new(
         off_text: String,
@@ -45,5 +46,15 @@ impl CustomButton {
             pressed_text,
             toggled: if is_toggleable { Some(false) } else { None },
         }
+    }
+}
+#[derive(Resource, Default, Reflect)]
+pub struct Player {
+    pub deck: Vec<Card>,
+}
+
+impl Player {
+    pub fn new(deck: Vec<Card>) -> Player {
+        Player { deck }
     }
 }

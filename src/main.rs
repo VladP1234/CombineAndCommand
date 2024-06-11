@@ -24,13 +24,16 @@ fn main() {
             MapPlugin,
             DefaultPickingPlugins,
             CombatPlugin,
+            RestSitePlugin,
             // Debug stuff
             WorldInspectorPlugin::new(),
             StateInspectorPlugin::<GameState>::default(),
-            ResourceInspectorPlugin::<MapManager>::default(),
-            ResourceInspectorPlugin::<CombatManager>::default(),
+            // ResourceInspectorPlugin::<MapManager>::default(),
+            // ResourceInspectorPlugin::<CombatManager>::default(),
+            ResourceInspectorPlugin::<Player>::default(),
         ))
         .register_type::<MapManager>()
+        .register_type::<SelectedCard>()
         .run();
 }
 
@@ -88,6 +91,19 @@ fn button_system(
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
+    let mut deck: Vec<Card> = Vec::new();
+    deck.push(Card::new(Effect::BonusDamage(-2), 1));
+    deck.push(Card::new(Effect::BonusHealth(-2), 1));
+    deck.push(Card::new(Effect::BonusCountdown(1), 1));
+    deck.push(Card::new(
+        vec![Effect::BonusHealth(-4), Effect::BonusDamage(6)],
+        1,
+    ));
+    deck.push(Card::new(
+        vec![Effect::BonusHealth(-3), Effect::BonusHealth(6)],
+        1,
+    ));
+    commands.insert_resource(Player::new(deck));
     commands
         .spawn(NodeBundle {
             style: Style {

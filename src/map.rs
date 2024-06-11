@@ -1,7 +1,6 @@
 use crate::*;
 use bevy::input::mouse::MouseWheel;
-use bevy_mod_picking::events::Out;
-use bevy_mod_picking::events::{Click, Over, Pointer};
+use bevy_mod_picking::events::{Click, Out, Over, Pointer};
 use bevy_mod_picking::prelude::On;
 use bevy_mod_picking::PickableBundle;
 use rand::{thread_rng, Rng};
@@ -23,7 +22,7 @@ impl Plugin for MapPlugin {
 
 #[derive(Resource, Default, Reflect)]
 pub struct MapManager {
-    map_data: Option<HashMap<(i32, i32), Vec<(i32, i32)>>>,
+    map_data: Option<HashMap<Tile, Vec<(i32, i32)>>>,
     current_tile: (i32, i32),
 }
 
@@ -36,20 +35,34 @@ fn clean_up(mut commands: Commands, map_things: Query<Entity, With<MapThing>>) {
     }
 }
 
+#[derive(Eq, Hash, PartialEq, Reflect, Clone, Copy)]
+struct Tile {
+    pos: (i32, i32),
+    tile_type: GameState,
+}
+
 // Converted proof of concept Python Script to Rust with GPT 4 (generate_map_data + add_connections)
-fn generate_map_data() -> HashMap<(i32, i32), Vec<(i32, i32)>> {
-    let mut connections: HashMap<(i32, i32), Vec<(i32, i32)>> = HashMap::new();
+fn generate_map_data() -> HashMap<Tile, Vec<(i32, i32)>> {
+    let mut connections: HashMap<Tile, Vec<(i32, i32)>> = HashMap::new();
     let mut rng = thread_rng();
 
     for _ in 0..3 {
-        let mut current_tile = (rng.gen_range(0..=4), 0);
+        let mut current_tile_pos = (rng.gen_range(0..=4), 0);
+        let mut current_tile: Tile = Tile {
+            pos: current_tile_pos,
+            tile_type: select_tile_type(current_tile_pos.1),
+        };
         for _ in 0..(START_TILE.1 - 1) {
             let new_tile = (
-                rng.gen_range((current_tile.0 - 1).max(0)..=(current_tile.0 + 1).min(4)),
-                current_tile.1 + 1,
+                rng.gen_range((current_tile_pos.0 - 1).max(0)..=(current_tile_pos.0 + 1).min(4)),
+                current_tile_pos.1 + 1,
             );
             add_connection(&mut connections, current_tile, new_tile);
-            current_tile = new_tile;
+            current_tile_pos = new_tile;
+            current_tile = Tile {
+                pos: current_tile_pos,
+                tile_type: select_tile_type(current_tile_pos.1),
+            };
         }
         add_connection(&mut connections, current_tile, START_TILE)
     }
@@ -58,8 +71,8 @@ fn generate_map_data() -> HashMap<(i32, i32), Vec<(i32, i32)>> {
 }
 
 fn add_connection(
-    connections: &mut HashMap<(i32, i32), Vec<(i32, i32)>>,
-    from_tile: (i32, i32),
+    connections: &mut HashMap<Tile, Vec<(i32, i32)>>,
+    from_tile: Tile,
     to_tile: (i32, i32),
 ) {
     connections
@@ -68,9 +81,26 @@ fn add_connection(
         .push(to_tile);
 }
 
-fn generate_map(mut commands: Commands, opt_map_manager: Option<ResMut<MapManager>>) {
-    let mut generated_tiles: Vec<(i32, i32)> = Vec::new();
-    let map_data: HashMap<(i32, i32), Vec<(i32, i32)>>;
+fn select_tile_type(floor: i32) -> GameState {
+    if floor < 5 {
+        let mut rng = thread_rng();
+        let num: f64 = rng.gen();
+        if num > 0.8 {
+            GameState::RestSite
+        } else {
+            GameState::Combat
+        }
+    } else {
+        GameState::Combat
+    }
+}
+
+fn generate_map(
+    mut commands: Commands,
+    opt_map_manager: Option<ResMut<MapManager>>,
+    asset_server: Res<AssetServer>,
+) {
+    let map_data: HashMap<Tile, Vec<(i32, i32)>>;
     let mut current_tile: (i32, i32) = START_TILE;
     if let Some(mut map_manager) = opt_map_manager {
         if let Some(data) = &map_manager.map_data {
@@ -88,9 +118,10 @@ fn generate_map(mut commands: Commands, opt_map_manager: Option<ResMut<MapManage
         })
     }
 
+    let mut generated_tiles: Vec<Tile> = Vec::new();
     for (end_tile, start_tiles) in map_data {
-        let x1 = end_tile.0 as f32 * 230. - 460.;
-        let y1 = (end_tile.1 - current_tile.1 + 2) as f32 * 300. - 300.;
+        let x1 = end_tile.pos.0 as f32 * 230. - 460.;
+        let y1 = (end_tile.pos.1 - current_tile.1 + 2) as f32 * 300. - 300.;
         for start_tile in &start_tiles {
             let x2 = start_tile.0 as f32 * 230.0 - 460.;
             let y2 = (start_tile.1 - current_tile.1 + 2) as f32 * 300. - 300.;
@@ -118,6 +149,7 @@ fn generate_map(mut commands: Commands, opt_map_manager: Option<ResMut<MapManage
                     &current_tile,
                     &start_tiles,
                     &end_tile,
+                    &asset_server,
                 );
                 generated_tiles.push(end_tile);
             }
@@ -130,9 +162,17 @@ fn spawn_tile(
     pos: (f32, f32),
     current_tile: &(i32, i32),
     start_tiles: &Vec<(i32, i32)>,
-    spawning_tile: &(i32, i32),
+    spawning_tile: &Tile,
+    asset_server: &Res<AssetServer>,
 ) {
+    let image: Handle<Image>;
+    match spawning_tile.tile_type {
+        GameState::Combat => image = asset_server.load("icons/combat.png"),
+        GameState::RestSite => image = asset_server.load("icons/rest_site.png"),
+        _ => image = asset_server.load("icons/placeholder.png"),
+    }
     let bundle = SpriteBundle {
+        texture: image,
         sprite: Sprite {
             color: Color::DARK_GRAY,
             custom_size: Some(Vec2::new(100., 100.)),
@@ -144,7 +184,8 @@ fn spawn_tile(
     let mut binding = commands.spawn(bundle);
     let spawn = &mut binding.insert(Name::new("Encounter"));
     let tile = spawn.insert(MapThing);
-    let c_tile = spawning_tile.clone();
+    let tile_type = spawning_tile.tile_type;
+    let c_tile = spawning_tile.pos;
     for start_tile in start_tiles {
         if current_tile == start_tile {
             tile.insert(Sprite {
@@ -156,7 +197,7 @@ fn spawn_tile(
             tile.insert(On::<Pointer<Click>>::run(
                 move |mut next_state: ResMut<NextState<GameState>>,
                       mut map_manager: ResMut<MapManager>| {
-                    next_state.set(GameState::Combat);
+                    next_state.set(tile_type);
                     map_manager.current_tile = c_tile
                 },
             ));
@@ -171,6 +212,7 @@ fn spawn_tile(
                     sprite.color.set_l(0.5);
                 },
             ));
+            break;
         }
     }
 }

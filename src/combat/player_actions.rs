@@ -71,13 +71,15 @@ pub fn button_system(
                                 let mut cost = 0;
                                 if let Some((ref card, entity)) = cb_manager.selected_card {
                                     cost = card.cost;
-                                    match card.effect {
-                                        Effect::BonusDamage(damage) => {
-                                            attack.damage = (attack.damage + damage).max(0);
-                                        }
-                                        Effect::BonusHealth(health) => unit.hp += health,
-                                        Effect::BonusCountdown(countdown) => {
-                                            attack.remaining_turns += countdown
+                                    for effect in &card.effects {
+                                        match effect {
+                                            Effect::BonusDamage(damage) => {
+                                                attack.damage = (attack.damage + damage).max(0);
+                                            }
+                                            Effect::BonusHealth(health) => unit.hp += health,
+                                            Effect::BonusCountdown(countdown) => {
+                                                attack.remaining_turns += countdown
+                                            }
                                         }
                                     }
                                     card_selection_event_writer
@@ -170,8 +172,7 @@ pub fn spawn_button_on_unit(
 
 pub fn provide_player_with_options_system(
     mut commands: Commands,
-    friendly_units: Query<(&Transform, &Sprite, Entity), With<IsFriendly>>,
-    enemy_units: Query<(&Transform, &Sprite, Entity), Without<IsFriendly>>,
+    units: Query<(&Transform, &Sprite, Entity), With<Unit>>,
     mut card_events: EventReader<CardEvent>,
     windows: Query<&Window>,
     action_prompt_buttons: Query<(Entity, &CombatButtonType)>,
@@ -210,29 +211,8 @@ pub fn provide_player_with_options_system(
                     }
                 }
 
-                match selected_card.target {
-                    Target::Enemy => {
-                        for (unit_pos, unit_sprite, entity) in enemy_units.iter() {
-                            spawn_button_on_unit(
-                                unit_pos,
-                                unit_sprite,
-                                entity,
-                                &mut commands,
-                                window,
-                            )
-                        }
-                    }
-                    Target::Player => {
-                        for (unit_pos, unit_sprite, entity) in friendly_units.iter() {
-                            spawn_button_on_unit(
-                                unit_pos,
-                                unit_sprite,
-                                entity,
-                                &mut commands,
-                                window,
-                            )
-                        }
-                    }
+                for (unit_pos, unit_sprite, entity) in units.iter() {
+                    spawn_button_on_unit(unit_pos, unit_sprite, entity, &mut commands, window)
                 }
             }
             CardEvent::CardDeselected(opt_entity) => {
