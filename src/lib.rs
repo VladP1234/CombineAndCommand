@@ -8,6 +8,8 @@ pub mod combat;
 pub use combat::*;
 pub mod card;
 pub use card::*;
+pub mod base;
+pub use base::*;
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, States, Default, Reflect)]
 pub enum GameState {
     #[default]

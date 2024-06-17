@@ -1,0 +1,277 @@
+use crate::*;
+
+pub struct BasePlugin;
+
+impl Plugin for BasePlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, setup)
+            .add_state::<GameState>()
+            .add_event::<BaseEvent>()
+            .add_systems(
+                Update,
+                (button_system, base_event_manager).run_if(in_state(GameState::HomeBase)),
+            );
+    }
+}
+
+#[derive(Component)]
+struct BaseThing;
+
+#[derive(Event, Component, Clone)]
+enum BaseEvent {
+    LoadHomeScreen,
+    LoadLeaderSelectionMenu,
+    StartGame(Vec<Card>),
+}
+
+fn button_system(
+    mut interaction_query: Query<
+        (
+            &Interaction,
+            &mut BackgroundColor,
+            &mut BorderColor,
+            &Children,
+            &CustomButton,
+            &BaseEvent,
+            Entity,
+        ),
+        (Changed<Interaction>, With<Button>),
+    >,
+    mut text_query: Query<&mut Text>,
+    mut base_event_writer: EventWriter<BaseEvent>,
+) {
+    for (interaction, mut color, mut border_color, children, button_data, base_event, _entity) in
+        &mut interaction_query
+    {
+        let mut text = text_query.get_mut(children[0]).unwrap();
+        match *interaction {
+            Interaction::Pressed => {
+                text.sections[0].value = button_data.pressed_text.clone();
+                *color = PRESSED_BUTTON.into();
+                border_color.0 = Color::RED;
+                base_event_writer.send(base_event.clone())
+            }
+            Interaction::Hovered => {
+                text.sections[0].value = button_data.hover_text.clone();
+                *color = HOVERED_BUTTON.into();
+                border_color.0 = Color::WHITE;
+            }
+            Interaction::None => {
+                text.sections[0].value = button_data.off_text.clone();
+                *color = NORMAL_BUTTON.into();
+                border_color.0 = Color::BLACK;
+            }
+        }
+    }
+}
+
+// fn temp_func(mut commands: Commands) {
+//     let mut deck: Vec<Card> = Vec::new();
+//     deck.push(Card::new(Effect::BonusDamage(-2), 1));
+//     deck.push(Card::new(Effect::BonusHealth(-2), 1));
+//     deck.push(Card::new(Effect::BonusCountdown(1), 1));
+//     deck.push(Card::new(
+//         vec![Effect::BonusHealth(-4), Effect::BonusDamage(6)],
+//         1,
+//     ));
+//     deck.push(Card::new(
+//         vec![Effect::BonusHealth(-3), Effect::BonusHealth(6)],
+//         1,
+//     ));
+//     commands.insert_resource(Player::new(deck));
+// }
+
+fn base_event_manager(
+    mut base_event_reader: EventReader<BaseEvent>,
+    mut commands: Commands,
+    things: Query<Entity, With<BaseThing>>,
+    mut next_state: ResMut<NextState<GameState>>,
+) {
+    for event in base_event_reader.read() {
+        for thing in &things {
+            commands.entity(thing).despawn_recursive();
+        }
+        match event {
+            BaseEvent::LoadHomeScreen => {
+                commands
+                    .spawn(NodeBundle {
+                        style: Style {
+                            width: Val::Percent(100.0),
+                            height: Val::Percent(100.0),
+                            align_items: AlignItems::Center,
+                            justify_content: JustifyContent::Center,
+                            ..default()
+                        },
+                        ..default()
+                    })
+                    .insert(BaseThing)
+                    .with_children(|parent| {
+                        parent
+                            .spawn(ButtonBundle {
+                                style: Style {
+                                    width: Val::Px(400.0),
+                                    height: Val::Px(130.0),
+                                    border: UiRect::all(Val::Px(5.0)),
+                                    justify_content: JustifyContent::Center,
+                                    align_items: AlignItems::Center,
+                                    ..default()
+                                },
+                                border_color: BorderColor(Color::BLACK),
+                                background_color: NORMAL_BUTTON.into(),
+                                ..default()
+                            })
+                            .insert(CustomButton::new(
+                                "Select a Leader".to_string(),
+                                "Select a Leader".to_string(),
+                                "Select a Leader".to_string(),
+                                false,
+                            ))
+                            .insert(BaseEvent::LoadLeaderSelectionMenu)
+                            .with_children(|parent| {
+                                parent.spawn(TextBundle::from_section(
+                                    "Select a Leader",
+                                    TextStyle {
+                                        font_size: 40.0,
+                                        color: Color::rgb(0.9, 0.9, 0.9),
+                                        ..default()
+                                    },
+                                ));
+                            });
+                    });
+            }
+            BaseEvent::LoadLeaderSelectionMenu => {
+                commands
+                    .spawn(NodeBundle {
+                        style: Style {
+                            width: Val::Percent(100.0),
+                            height: Val::Percent(100.0),
+                            align_items: AlignItems::Center,
+                            justify_content: JustifyContent::Center,
+                            ..default()
+                        },
+                        ..default()
+                    })
+                    .insert(BaseThing)
+                    .with_children(|parent| {
+                        let mut deck: Vec<Card> = Vec::new();
+                        deck.push(Card::new(Effect::BonusDamage(-2), 1));
+                        deck.push(Card::new(Effect::BonusHealth(-2), 1));
+                        deck.push(Card::new(Effect::BonusCountdown(1), 1));
+                        deck.push(Card::new(
+                            vec![Effect::BonusHealth(-4), Effect::BonusDamage(6)],
+                            1,
+                        ));
+                        deck.push(Card::new(
+                            vec![Effect::BonusHealth(-3), Effect::BonusHealth(6)],
+                            1,
+                        ));
+                        parent
+                            .spawn(ButtonBundle {
+                                style: Style {
+                                    width: Val::Percent(20.),
+                                    height: Val::Percent(70.),
+                                    margin: UiRect::all(Val::Percent(5.)),
+                                    border: UiRect::all(Val::Px(5.0)),
+                                    justify_content: JustifyContent::Center,
+                                    align_items: AlignItems::Center,
+                                    ..default()
+                                },
+                                border_color: BorderColor(Color::BLACK),
+                                background_color: NORMAL_BUTTON.into(),
+                                ..default()
+                            })
+                            .insert(CustomButton::new(
+                                "Leader 1".to_string(),
+                                "Leader 1".to_string(),
+                                "Leader 1".to_string(),
+                                false,
+                            ))
+                            .insert(BaseEvent::StartGame(deck.clone()))
+                            .with_children(|parent| {
+                                parent.spawn(TextBundle::from_section(
+                                    "Select a Leader",
+                                    TextStyle {
+                                        font_size: 40.0,
+                                        color: Color::rgb(0.9, 0.9, 0.9),
+                                        ..default()
+                                    },
+                                ));
+                            });
+                        parent
+                            .spawn(ButtonBundle {
+                                style: Style {
+                                    width: Val::Percent(20.),
+                                    height: Val::Percent(70.),
+                                    margin: UiRect::all(Val::Percent(5.)),
+                                    border: UiRect::all(Val::Px(5.0)),
+                                    justify_content: JustifyContent::Center,
+                                    align_items: AlignItems::Center,
+                                    ..default()
+                                },
+                                border_color: BorderColor(Color::BLACK),
+                                background_color: NORMAL_BUTTON.into(),
+                                ..default()
+                            })
+                            .insert(CustomButton::new(
+                                "Leader 2".to_string(),
+                                "Leader 2".to_string(),
+                                "Leader 2".to_string(),
+                                false,
+                            ))
+                            .insert(BaseEvent::StartGame(deck.clone()))
+                            .with_children(|parent| {
+                                parent.spawn(TextBundle::from_section(
+                                    "Select a Leader",
+                                    TextStyle {
+                                        font_size: 40.0,
+                                        color: Color::rgb(0.9, 0.9, 0.9),
+                                        ..default()
+                                    },
+                                ));
+                            });
+                        parent
+                            .spawn(ButtonBundle {
+                                style: Style {
+                                    width: Val::Percent(20.),
+                                    height: Val::Percent(70.),
+                                    margin: UiRect::all(Val::Percent(5.)),
+                                    border: UiRect::all(Val::Px(5.0)),
+                                    justify_content: JustifyContent::Center,
+                                    align_items: AlignItems::Center,
+                                    ..default()
+                                },
+                                border_color: BorderColor(Color::BLACK),
+                                background_color: NORMAL_BUTTON.into(),
+                                ..default()
+                            })
+                            .insert(CustomButton::new(
+                                "Leader 3".to_string(),
+                                "Leader 3".to_string(),
+                                "Leader 3".to_string(),
+                                false,
+                            ))
+                            .insert(BaseEvent::StartGame(deck))
+                            .with_children(|parent| {
+                                parent.spawn(TextBundle::from_section(
+                                    "Select a Leader",
+                                    TextStyle {
+                                        font_size: 40.0,
+                                        color: Color::rgb(0.9, 0.9, 0.9),
+                                        ..default()
+                                    },
+                                ));
+                            });
+                    });
+            }
+            BaseEvent::StartGame(deck) => {
+                commands.insert_resource(Player::new(deck.clone()));
+                next_state.set(GameState::Map);
+            }
+        }
+    }
+}
+
+fn setup(mut commands: Commands, mut base_event_writer: EventWriter<BaseEvent>) {
+    commands.spawn(Camera2dBundle::default());
+    base_event_writer.send(BaseEvent::LoadHomeScreen);
+}
