@@ -25,6 +25,7 @@ fn main() {
             CombatPlugin,
             RestSitePlugin,
             BasePlugin,
+            UtilsPlugin,
             // Debug stuff
             WorldInspectorPlugin::new(),
             StateInspectorPlugin::<GameState>::default(),

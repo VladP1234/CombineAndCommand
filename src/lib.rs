@@ -10,6 +10,8 @@ pub mod card;
 pub use card::*;
 pub mod base;
 pub use base::*;
+pub mod utils;
+pub use utils::*;
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash, States, Default, Reflect)]
 pub enum GameState {
     #[default]

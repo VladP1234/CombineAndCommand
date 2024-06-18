@@ -1,10 +1,6 @@
 use crate::*;
 
-pub fn spawn_stuff(mut commands: Commands) {
-    let mut deck: Vec<Card> = Vec::new();
-    deck.push(Card::new(Effect::BonusDamage(-2), 1));
-    deck.push(Card::new(Effect::BonusHealth(-2), 1));
-    deck.push(Card::new(Effect::BonusCountdown(1), 1));
+pub fn spawn_stuff(mut commands: Commands, player: Res<Player>) {
     spawn_unit(
         &mut commands,
         Unit::new(10, (0, 0)),
@@ -18,7 +14,7 @@ pub fn spawn_stuff(mut commands: Commands) {
         Attack::new(1, 1),
     );
     let mut starter_cards: Vec<Entity> = Vec::new();
-    for card in &deck {
+    for card in &player.deck[0..3] {
         let card_id = make_card(&mut commands, card);
         starter_cards.push(card_id);
     }
@@ -40,7 +36,7 @@ pub fn spawn_stuff(mut commands: Commands) {
         .insert_children(0, &starter_cards)
         .id();
 
-    commands.insert_resource(CombatManager::new(deck, 3, hand_node));
+    commands.insert_resource(CombatManager::new(player.deck.clone(), 3, hand_node));
 
     commands
         .spawn(NodeBundle {
