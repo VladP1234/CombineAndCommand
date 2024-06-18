@@ -256,11 +256,6 @@ pub fn make_card(commands: &mut Commands, card: &Card) -> Entity {
                     },
                 )
                 .with_alignment(TextAlignment::Center),
-                style: Style {
-                    align_self: AlignSelf::End,
-                    height: Val::Percent(70.),
-                    ..default()
-                },
                 ..default()
             });
         });
