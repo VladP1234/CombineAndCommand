@@ -38,7 +38,6 @@ pub fn button_system(
             Interaction::Pressed => {
                 text.sections[0].value = button_data.pressed_text.clone();
                 *color = PRESSED_BUTTON.into();
-                border_color.0 = Color::WHITE;
                 if let Some(toggle_state) = button_data.toggled {
                     button_data.toggled = Some(!toggle_state)
                 }
@@ -240,8 +239,14 @@ pub fn provide_player_with_options_system(
                     }
                 }
                 if let Some(entity) = opt_entity {
-                    for (_, _, _, _, _, button_entity) in buttons.iter_mut() {
+                    for (_, _, _, _, button_type, button_entity) in buttons.iter_mut() {
                         if button_entity == *entity {
+                            match button_type {
+                                CombatButtonType::Card(card) => {
+                                    cb_manager.discard_pile.push(card.clone())
+                                }
+                                _ => {}
+                            }
                             commands.entity(*entity).despawn_recursive()
                         }
                     }

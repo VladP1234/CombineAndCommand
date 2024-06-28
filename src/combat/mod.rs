@@ -10,6 +10,7 @@ pub struct CombatPlugin;
 impl Plugin for CombatPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Combat), spawn_stuff)
+            .add_systems(Update, preflight.run_if(resource_added::<CombatManager>()))
             .add_event::<EndOfTurnEvent>()
             .add_event::<CardEvent>()
             .add_systems(

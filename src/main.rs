@@ -30,8 +30,8 @@ fn main() {
             WorldInspectorPlugin::new(),
             StateInspectorPlugin::<GameState>::default(),
             // ResourceInspectorPlugin::<MapManager>::default(),
-            // ResourceInspectorPlugin::<CombatManager>::default(),
-            ResourceInspectorPlugin::<Player>::default(),
+            ResourceInspectorPlugin::<CombatManager>::default(),
+            // ResourceInspectorPlugin::<Player>::default(),
         ))
         .register_type::<MapManager>()
         .register_type::<SelectedCard>()

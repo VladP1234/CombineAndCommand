@@ -13,11 +13,6 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>) {
         false,
         Attack::new(1, 1),
     );
-    let mut starter_cards: Vec<Entity> = Vec::new();
-    for card in &player.deck[0..3] {
-        let card_id = make_card(&mut commands, card);
-        starter_cards.push(card_id);
-    }
     let hand_node: Entity = commands
         .spawn(NodeBundle {
             style: Style {
@@ -33,7 +28,6 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>) {
         })
         .insert(CombatThing)
         .insert(Name::new("Hand Node"))
-        .insert_children(0, &starter_cards)
         .id();
 
     commands.insert_resource(CombatManager::new(player.deck.clone(), 3, hand_node));
@@ -89,6 +83,19 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>) {
                     ));
                 });
         });
+}
+
+pub fn preflight(mut commands: Commands, mut cb_manager: ResMut<CombatManager>) {
+    debug!("here");
+    for _ in 0..3 {
+        let attempted_drawn_card = cb_manager.draw();
+        if let Some(drawn_card) = attempted_drawn_card {
+            let card_entity = make_card(&mut commands, &drawn_card);
+            commands
+                .entity(cb_manager.hand_node)
+                .insert_children(0, &[card_entity]);
+        }
+    }
 }
 
 pub fn update_unit_ui(

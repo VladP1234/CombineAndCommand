@@ -48,7 +48,6 @@ fn button_system(
             Interaction::Pressed => {
                 text.sections[0].value = button_data.pressed_text.clone();
                 *color = PRESSED_BUTTON.into();
-                border_color.0 = Color::RED;
                 base_event_writer.send(base_event.clone())
             }
             Interaction::Hovered => {
