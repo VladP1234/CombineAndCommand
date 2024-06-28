@@ -88,13 +88,18 @@ pub struct CombatThing;
 
 #[derive(Component, Reflect, Debug)]
 pub struct Unit {
+    max_hp: i32,
     hp: i32,
     pos: (i32, i32),
 }
 
 impl Unit {
     pub fn new(hp: i32, pos: (i32, i32)) -> Unit {
-        Unit { hp, pos }
+        Unit {
+            max_hp: hp,
+            hp,
+            pos,
+        }
     }
 }
 

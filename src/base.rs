@@ -64,22 +64,6 @@ fn button_system(
     }
 }
 
-// fn temp_func(mut commands: Commands) {
-//     let mut deck: Vec<Card> = Vec::new();
-//     deck.push(Card::new(Effect::BonusDamage(-2), 1));
-//     deck.push(Card::new(Effect::BonusHealth(-2), 1));
-//     deck.push(Card::new(Effect::BonusCountdown(1), 1));
-//     deck.push(Card::new(
-//         vec![Effect::BonusHealth(-4), Effect::BonusDamage(6)],
-//         1,
-//     ));
-//     deck.push(Card::new(
-//         vec![Effect::BonusHealth(-3), Effect::BonusHealth(6)],
-//         1,
-//     ));
-//     commands.insert_resource(Player::new(deck));
-// }
-
 fn base_event_manager(
     mut base_event_reader: EventReader<BaseEvent>,
     mut commands: Commands,
@@ -157,11 +141,11 @@ fn base_event_manager(
                         deck.push(Card::new(Effect::BonusHealth(-2), 1));
                         deck.push(Card::new(Effect::BonusCountdown(1), 1));
                         deck.push(Card::new(
-                            vec![Effect::BonusHealth(-4), Effect::BonusDamage(6)],
+                            vec![Effect::DealDamage(4), Effect::BonusDamage(6)],
                             1,
                         ));
                         deck.push(Card::new(
-                            vec![Effect::BonusHealth(-3), Effect::BonusHealth(6)],
+                            vec![Effect::DealDamage(3), Effect::BonusHealth(6)],
                             1,
                         ));
                         parent

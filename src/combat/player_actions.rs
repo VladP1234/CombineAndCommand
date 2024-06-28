@@ -75,9 +75,20 @@ pub fn button_system(
                                             Effect::BonusDamage(damage) => {
                                                 attack.damage = (attack.damage + damage).max(0);
                                             }
-                                            Effect::BonusHealth(health) => unit.hp += health,
+                                            Effect::BonusHealth(health) => {
+                                                unit.max_hp += health;
+                                                if unit.hp > unit.max_hp {
+                                                    unit.hp = unit.max_hp
+                                                }
+                                            }
                                             Effect::BonusCountdown(countdown) => {
                                                 attack.remaining_turns += countdown
+                                            }
+                                            Effect::DealDamage(hp) => {
+                                                unit.hp -= hp;
+                                                if unit.hp > unit.max_hp {
+                                                    unit.hp = unit.max_hp
+                                                }
                                             }
                                         }
                                     }

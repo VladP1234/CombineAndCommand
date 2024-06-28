@@ -5,6 +5,7 @@ pub enum Effect {
     BonusDamage(i32),
     BonusHealth(i32),
     BonusCountdown(i32),
+    DealDamage(i32),
 }
 
 #[derive(Reflect, Clone, PartialEq, Component, Debug)]
@@ -64,6 +65,13 @@ pub fn make_description(effects: Vec<Effect>) -> String {
                     format!("reduce the countdown by {}", amount)
                 } else {
                     format!("increase the countdown by {}", -amount)
+                }
+            }
+            Effect::DealDamage(amount) => {
+                if amount >= 0 {
+                    format!("deal {} damage", amount)
+                } else {
+                    format!("heal {} damage", -amount)
                 }
             }
         };
