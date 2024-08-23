@@ -1,5 +1,7 @@
 use bevy::ecs::schedule::States;
 use bevy::prelude::*;
+use serde_json::Error as JsonError;
+use std::fs;
 pub mod map;
 pub use map::*;
 pub mod rest_sites;
@@ -61,4 +63,12 @@ impl Player {
     pub fn new(deck: Vec<Card>) -> Player {
         Player { deck }
     }
+}
+
+pub fn load_json_from_file<T>(file_path: &str) -> Result<T, JsonError>
+where
+    T: serde::de::DeserializeOwned,
+{
+    let contents = fs::read_to_string(file_path).map_err(|e| JsonError::io(e))?;
+    serde_json::from_str(&contents)
 }
