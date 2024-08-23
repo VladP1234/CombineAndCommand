@@ -1,17 +1,38 @@
 use crate::*;
+use rand::prelude::SliceRandom;
+use rand::thread_rng;
 
-pub fn spawn_stuff(mut commands: Commands, player: Res<Player>) {
+pub fn spawn_stuff(mut commands: Commands, player: Res<Player>, map_manager: Res<MapManager>) {
+    // Spawns in enemy units
+    let floor = map_manager.current_tile.1;
+    let pool = match floor {
+        0..=5 => "hard_pool",
+        _ => "easy_pool",
+    };
+
+    let combats_data =
+        load_json_from_file::<[(String, Vec<Vec<(Unit, Attack)>>); 2]>("combats_data.json")
+            .unwrap();
+
+    let pool_data = combats_data
+        .iter()
+        .find(|(key, _)| key == pool)
+        .map(|(_, data)| data)
+        .unwrap();
+
+    let mut rng = thread_rng();
+
+    let combat_data = pool_data.choose(&mut rng).unwrap();
+
+    for (unit, attack) in combat_data {
+        spawn_unit(&mut commands, unit.clone(), false, attack.clone())
+    }
+
     spawn_unit(
         &mut commands,
         Unit::new(10, (0, 0)),
         true,
         Attack::new(1, 2),
-    );
-    spawn_unit(
-        &mut commands,
-        Unit::new(10, (0, 0)),
-        false,
-        Attack::new(1, 1),
     );
     let hand_node: Entity = commands
         .spawn(NodeBundle {
@@ -94,6 +115,49 @@ pub fn preflight(mut commands: Commands, mut cb_manager: ResMut<CombatManager>) 
             commands
                 .entity(cb_manager.hand_node)
                 .insert_children(0, &[card_entity]);
+        }
+    }
+}
+
+pub fn update_unit_pos(mut units: Query<(&mut Unit, Option<&IsFriendly>)>) {
+    let mut friendlies: Vec<Mut<'_, Unit>> = Vec::new();
+    let mut friendly_pos: Vec<(i32, i32)> = Vec::new();
+    let mut enemies: Vec<Mut<'_, Unit>> = Vec::new();
+    let mut enemy_pos: Vec<(i32, i32)> = Vec::new();
+    for (unit, is_friendly) in units.iter_mut() {
+        if is_friendly.is_some() {
+            friendly_pos.push(unit.pos);
+            friendlies.push(unit)
+        } else {
+            enemy_pos.push(unit.pos);
+            enemies.push(unit)
+        }
+    }
+    move_unit(friendlies, friendly_pos);
+    move_unit(enemies, enemy_pos);
+}
+
+fn move_unit(mut units: Vec<Mut<'_, Unit>>, mut positions: Vec<(i32, i32)>) {
+    units.sort_by(|unit1, unit2| {
+        if unit1.pos.1 == unit2.pos.1 {
+            unit1.pos.0.cmp(&unit2.pos.0)
+        } else {
+            unit1.pos.1.cmp(&unit2.pos.1)
+        }
+    });
+    debug!("{:?}", units);
+    for mut unit in units {
+        if unit.pos == (0, 0) {
+            continue;
+        }
+        if !positions.contains(&(unit.pos.0 - 1, unit.pos.1)) && unit.pos.0 != 0 {
+            positions.retain(|&x| x != unit.pos);
+            unit.pos = (unit.pos.0 - 1, unit.pos.1);
+            positions.push(unit.pos)
+        } else if unit.pos.1 != 0 && !positions.contains(&(unit.pos.0, unit.pos.1 - 1)) {
+            positions.retain(|&x| x != unit.pos);
+            unit.pos = (unit.pos.0, unit.pos.1 - 1);
+            positions.push(unit.pos)
         }
     }
 }

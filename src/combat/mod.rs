@@ -1,10 +1,12 @@
 pub mod flow;
 pub mod player_actions;
+
 use crate::*;
 pub use flow::*;
 pub use player_actions::*;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use serde::{Deserialize, Serialize};
 pub struct CombatPlugin;
 
 impl Plugin for CombatPlugin {
@@ -22,6 +24,7 @@ impl Plugin for CombatPlugin {
                     deal_damage_system.after(handle_end_of_turn),
                     provide_player_with_options_system,
                     remove_dead_units.after(deal_damage_system),
+                    update_unit_pos.after(remove_dead_units),
                     end_combat,
                 )
                     .distributive_run_if(in_state(GameState::Combat)),
@@ -86,7 +89,7 @@ impl CombatManager {
 #[derive(Component)]
 pub struct CombatThing;
 
-#[derive(Component, Reflect, Debug)]
+#[derive(Component, Reflect, Debug, Serialize, Deserialize, Clone)]
 pub struct Unit {
     max_hp: i32,
     hp: i32,
@@ -106,7 +109,7 @@ impl Unit {
 #[derive(Component)]
 pub struct IsFriendly;
 
-#[derive(Component, Reflect, Debug)]
+#[derive(Component, Reflect, Debug, Serialize, Deserialize, Clone)]
 pub struct Attack {
     pub attack_interval: i32,
     pub remaining_turns: i32,

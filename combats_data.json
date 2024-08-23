@@ -1,0 +1,1152 @@
+[
+  [
+    "easy_pool",
+    [
+      [
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 8,
+            "hp": 8,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 9,
+            "hp": 9,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 3
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 6,
+            "hp": 6,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 6,
+            "hp": 6,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 9,
+            "hp": 9,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 2
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 9,
+            "hp": 9,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 9,
+            "hp": 9,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 9,
+            "remaining_turns": 9,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 5,
+            "hp": 5,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 6,
+            "hp": 6,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 1
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 8,
+            "hp": 8,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 7,
+            "hp": 7,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 9,
+            "hp": 9,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 9,
+            "remaining_turns": 9,
+            "damage": 1
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 6,
+            "hp": 6,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 7,
+            "hp": 7,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 3
+          }
+        ]
+      ]
+    ]
+  ],
+  [
+    "hard_pool",
+    [
+      [
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 5
+          }
+        ],
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              2,
+              1
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 5
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 14,
+            "hp": 14,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 5
+          }
+        ],
+        [
+          {
+            "max_hp": 14,
+            "hp": 14,
+            "pos": [
+              2,
+              1
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 6
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 5
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 14,
+            "hp": 14,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              2,
+              1
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 3
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 4
+          }
+        ],
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 4
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 14,
+            "hp": 14,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              2,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 3
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              2,
+              1
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 3
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 4
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 14,
+            "hp": 14,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 3
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 5
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 4
+          }
+        ],
+        [
+          {
+            "max_hp": 14,
+            "hp": 14,
+            "pos": [
+              2,
+              1
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 3
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 5
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 4
+          }
+        ],
+        [
+          {
+            "max_hp": 10,
+            "hp": 10,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 5
+          }
+        ],
+        [
+          {
+            "max_hp": 11,
+            "hp": 11,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 4
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 4,
+            "remaining_turns": 4,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 5
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 8,
+            "remaining_turns": 8,
+            "damage": 3
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 3,
+            "remaining_turns": 3,
+            "damage": 6
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 15,
+            "hp": 15,
+            "pos": [
+              0,
+              1
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 1
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              1,
+              0
+            ]
+          },
+          {
+            "attack_interval": 6,
+            "remaining_turns": 6,
+            "damage": 6
+          }
+        ],
+        [
+          {
+            "max_hp": 12,
+            "hp": 12,
+            "pos": [
+              1,
+              1
+            ]
+          },
+          {
+            "attack_interval": 5,
+            "remaining_turns": 5,
+            "damage": 2
+          }
+        ],
+        [
+          {
+            "max_hp": 13,
+            "hp": 13,
+            "pos": [
+              2,
+              0
+            ]
+          },
+          {
+            "attack_interval": 7,
+            "remaining_turns": 7,
+            "damage": 2
+          }
+        ]
+      ]
+    ]
+  ]
+]

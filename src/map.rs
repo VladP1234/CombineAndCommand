@@ -23,7 +23,7 @@ impl Plugin for MapPlugin {
 #[derive(Resource, Default, Reflect)]
 pub struct MapManager {
     map_data: Option<HashMap<Tile, Vec<(i32, i32)>>>,
-    current_tile: (i32, i32),
+    pub current_tile: (i32, i32),
 }
 
 #[derive(Component)]
