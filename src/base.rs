@@ -172,7 +172,7 @@ fn base_event_manager(
                             .insert(BaseEvent::StartGame(deck.clone()))
                             .with_children(|parent| {
                                 parent.spawn(TextBundle::from_section(
-                                    "Select a Leader",
+                                    "Leader 1",
                                     TextStyle {
                                         font_size: 40.0,
                                         color: Color::rgb(0.9, 0.9, 0.9),
@@ -204,7 +204,7 @@ fn base_event_manager(
                             .insert(BaseEvent::StartGame(deck.clone()))
                             .with_children(|parent| {
                                 parent.spawn(TextBundle::from_section(
-                                    "Select a Leader",
+                                    "Leader 2",
                                     TextStyle {
                                         font_size: 40.0,
                                         color: Color::rgb(0.9, 0.9, 0.9),
@@ -236,7 +236,7 @@ fn base_event_manager(
                             .insert(BaseEvent::StartGame(deck))
                             .with_children(|parent| {
                                 parent.spawn(TextBundle::from_section(
-                                    "Select a Leader",
+                                    "Leader 3",
                                     TextStyle {
                                         font_size: 40.0,
                                         color: Color::rgb(0.9, 0.9, 0.9),
