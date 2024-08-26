@@ -21,7 +21,7 @@ struct BaseThing;
 enum BaseEvent {
     LoadHomeScreen,
     LoadLeaderSelectionMenu,
-    StartGame(Vec<Card>),
+    StartGame(Vec<Card>, Vec<(Unit, Attack)>),
 }
 
 fn button_system(
@@ -148,6 +148,12 @@ fn base_event_manager(
                             vec![Effect::DealDamage(3), Effect::BonusHealth(6)],
                             1,
                         ));
+
+                        let mut p_units: Vec<(Unit, Attack)> = Vec::new();
+                        p_units.push((Unit::new(10, (0, 0)), Attack::new(4, 3)));
+                        p_units.push((Unit::new(10, (0, 1)), Attack::new(9, 100)));
+                        p_units.push((Unit::new(10, (1, 0)), Attack::new(6, 5)));
+
                         parent
                             .spawn(ButtonBundle {
                                 style: Style {
@@ -169,7 +175,7 @@ fn base_event_manager(
                                 "Leader 1".to_string(),
                                 false,
                             ))
-                            .insert(BaseEvent::StartGame(deck.clone()))
+                            .insert(BaseEvent::StartGame(deck.clone(), p_units.clone()))
                             .with_children(|parent| {
                                 parent.spawn(TextBundle::from_section(
                                     "Leader 1",
@@ -201,7 +207,7 @@ fn base_event_manager(
                                 "Leader 2".to_string(),
                                 false,
                             ))
-                            .insert(BaseEvent::StartGame(deck.clone()))
+                            .insert(BaseEvent::StartGame(deck.clone(), p_units.clone()))
                             .with_children(|parent| {
                                 parent.spawn(TextBundle::from_section(
                                     "Leader 2",
@@ -233,7 +239,7 @@ fn base_event_manager(
                                 "Leader 3".to_string(),
                                 false,
                             ))
-                            .insert(BaseEvent::StartGame(deck))
+                            .insert(BaseEvent::StartGame(deck, p_units))
                             .with_children(|parent| {
                                 parent.spawn(TextBundle::from_section(
                                     "Leader 3",
@@ -246,8 +252,8 @@ fn base_event_manager(
                             });
                     });
             }
-            BaseEvent::StartGame(deck) => {
-                commands.insert_resource(Player::new(deck.clone()));
+            BaseEvent::StartGame(deck, units) => {
+                commands.insert_resource(Player::new(deck.clone(), units.clone()));
                 next_state.set(GameState::Map);
             }
         }

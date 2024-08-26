@@ -28,12 +28,10 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>, map_manager: Res
         spawn_unit(&mut commands, unit.clone(), false, attack.clone())
     }
 
-    spawn_unit(
-        &mut commands,
-        Unit::new(10, (0, 0)),
-        true,
-        Attack::new(1, 2),
-    );
+    for (unit, attack) in &player.units {
+        spawn_unit(&mut commands, unit.clone(), true, attack.clone())
+    }
+
     let hand_node: Entity = commands
         .spawn(NodeBundle {
             style: Style {
@@ -145,7 +143,6 @@ fn move_unit(mut units: Vec<Mut<'_, Unit>>, mut positions: Vec<(i32, i32)>) {
             unit1.pos.1.cmp(&unit2.pos.1)
         }
     });
-    debug!("{:?}", units);
     for mut unit in units {
         if unit.pos == (0, 0) {
             continue;
@@ -177,13 +174,13 @@ pub fn update_unit_ui(
         unit_pos.translation = if is_friendly.is_some() {
             Vec3::new(
                 -100.0 - 150.0 * unit_struct.pos.0 as f32,
-                100.0 - 200.0 * unit_struct.pos.1 as f32,
+                200.0 - 200.0 * unit_struct.pos.1 as f32,
                 0.0,
             )
         } else {
             Vec3::new(
                 100.0 + 150.0 * unit_struct.pos.0 as f32,
-                100.0 - 200.0 * unit_struct.pos.1 as f32,
+                200.0 - 200.0 * unit_struct.pos.1 as f32,
                 0.0,
             )
         };

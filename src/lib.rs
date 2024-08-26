@@ -57,11 +57,12 @@ impl CustomButton {
 #[derive(Resource, Default, Reflect)]
 pub struct Player {
     pub deck: Vec<Card>,
+    pub units: Vec<(Unit, Attack)>,
 }
 
 impl Player {
-    pub fn new(deck: Vec<Card>) -> Player {
-        Player { deck }
+    pub fn new(deck: Vec<Card>, units: Vec<(Unit, Attack)>) -> Player {
+        Player { deck, units }
     }
 }
 
