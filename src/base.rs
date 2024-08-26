@@ -104,15 +104,15 @@ fn base_event_manager(
                                 ..default()
                             })
                             .insert(CustomButton::new(
-                                "Select a Leader".to_string(),
-                                "Select a Leader".to_string(),
-                                "Select a Leader".to_string(),
+                                "Start Game".to_string(),
+                                "Start Game".to_string(),
+                                "Start Game".to_string(),
                                 false,
                             ))
                             .insert(BaseEvent::LoadLeaderSelectionMenu)
                             .with_children(|parent| {
                                 parent.spawn(TextBundle::from_section(
-                                    "Select a Leader",
+                                    "Start Game",
                                     TextStyle {
                                         font_size: 40.0,
                                         color: Color::rgb(0.9, 0.9, 0.9),

@@ -11,8 +11,7 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>, map_manager: Res
     };
 
     let combats_data =
-        load_json_from_file::<[(String, Vec<Vec<(Unit, Attack)>>); 2]>("combats_data.json")
-            .unwrap();
+        json_from_str::<[(String, Vec<Vec<(Unit, Attack)>>); 2]>(COMBATS_DATA).unwrap();
 
     let pool_data = combats_data
         .iter()

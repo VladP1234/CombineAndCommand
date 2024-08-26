@@ -1,7 +1,5 @@
 use bevy::ecs::schedule::States;
 use bevy::prelude::*;
-use serde_json::Error as JsonError;
-use std::fs;
 pub mod map;
 pub use map::*;
 pub mod rest_sites;
@@ -28,6 +26,7 @@ pub const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
 pub const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
 pub const PRESSED_BUTTON: Color = Color::rgb(0.55, 0.55, 0.55);
 pub const START_TILE: (i32, i32) = (2, 8);
+pub const COMBATS_DATA: &str = include_str!("data/combats_data.json");
 
 #[derive(Component, Reflect)]
 pub struct CustomButton {
@@ -66,10 +65,9 @@ impl Player {
     }
 }
 
-pub fn load_json_from_file<T>(file_path: &str) -> Result<T, JsonError>
+pub fn json_from_str<T>(data: &str) -> Result<T, serde_json::Error>
 where
     T: serde::de::DeserializeOwned,
 {
-    let contents = fs::read_to_string(file_path).map_err(|e| JsonError::io(e))?;
-    serde_json::from_str(&contents)
+    serde_json::from_str(data)
 }
