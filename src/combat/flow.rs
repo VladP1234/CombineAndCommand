@@ -104,7 +104,6 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>, map_manager: Res
 }
 
 pub fn preflight(mut commands: Commands, mut cb_manager: ResMut<CombatManager>) {
-    debug!("here");
     for _ in 0..3 {
         let attempted_drawn_card = cb_manager.draw();
         if let Some(drawn_card) = attempted_drawn_card {
@@ -298,4 +297,5 @@ pub fn clean_up(mut commands: Commands, combat_things: Query<Entity, With<Combat
     for combat_thing in &combat_things {
         commands.entity(combat_thing).despawn_recursive()
     }
+    commands.remove_resource::<CombatManager>();
 }

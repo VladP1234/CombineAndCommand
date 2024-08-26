@@ -4,7 +4,11 @@ pub struct UtilsPlugin;
 
 impl Plugin for UtilsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (display_deck).run_if(resource_exists::<Player>()));
+        app.add_systems(
+            Update,
+            (display_deck, remove_tooltip).run_if(resource_exists::<Player>()),
+        )
+        .add_systems(Update, tooltip.run_if(resource_added::<Player>()));
     }
 }
 
@@ -86,6 +90,36 @@ fn display_deck(
     } else if keyboard_input.just_released(KeyCode::D) {
         for entity in &deck_display_items {
             commands.entity(entity).despawn_recursive();
+        }
+    }
+}
+
+#[derive(Component)]
+struct Tooltip;
+fn tooltip(mut commands: Commands) {
+    commands
+        .spawn(TextBundle {
+            text: Text::from_section(
+                "Press 'D' to view your deck",
+                TextStyle {
+                    font_size: 20.0,
+                    color: Color::rgba(0.9, 0.9, 0.9, 0.5),
+                    ..default()
+                },
+            ),
+            ..default()
+        })
+        .insert(Tooltip);
+}
+
+fn remove_tooltip(
+    mut commands: Commands,
+    tooltips: Query<Entity, With<Tooltip>>,
+    keyboard_input: Res<Input<KeyCode>>,
+) {
+    if keyboard_input.just_pressed(KeyCode::D) {
+        for tooltip in tooltips.iter() {
+            commands.entity(tooltip).despawn_recursive()
         }
     }
 }
