@@ -1,6 +1,7 @@
 use crate::*;
 use bevy_mod_picking::events::{Click, Out, Over, Pointer};
 use bevy_mod_picking::prelude::On;
+use std::collections::HashMap;
 
 pub struct RestSitePlugin;
 
@@ -43,7 +44,13 @@ pub enum SelectedCardAction {
 fn spawn_card_selector(commands: &mut Commands, actions: Vec<SelectedCardAction>, pos: Transform) {
     let mut binding: bevy::ecs::system::EntityCommands = commands.spawn(SpriteBundle {
         sprite: Sprite {
-            color: Color::DARK_GRAY,
+            color: *Color::Rgba {
+                red: 0.25,
+                green: 0.25,
+                blue: 0.25,
+                alpha: 1.0,
+            }
+            .set_l(0.5),
             custom_size: Some(Vec2 { x: 125., y: 200. }),
             ..default()
         },
@@ -77,7 +84,28 @@ fn spawn_card_selector(commands: &mut Commands, actions: Vec<SelectedCardAction>
     ));
 }
 
+fn make_text(commands: &mut Commands, text: String, size: f32, pos: Transform) {
+    commands.spawn(Text2dBundle {
+        text: Text::from_section(
+            text,
+            TextStyle {
+                font_size: size,
+                color: Color::rgb(0.9, 0.9, 0.9),
+                ..default()
+            },
+        ),
+        transform: pos,
+        ..default()
+    });
+}
+
 fn spawn_stuff(mut commands: Commands) {
+    make_text(
+        &mut commands,
+        "Select 2 Cards to Merge".into(),
+        50.0,
+        Transform::from_xyz(0., 300., 0.),
+    );
     let actions = vec![
         SelectedCardAction::RemoveFromDeck,
         SelectedCardAction::ReturnSelectedCardInfo(Transform::from_xyz(-175., 150., 0.)),
@@ -254,7 +282,7 @@ fn make_smithing_result(mut commands: Commands, cards: Query<(&SelectedCard, Ent
             cost_total += selected_card.0.cost;
             commands.entity(entity).despawn_recursive();
         }
-        let card = Card::new(effects, cost_total);
+        let card = Card::new(remove_duplicate_effects(effects), cost_total);
         let mut binding: bevy::ecs::system::EntityCommands = commands.spawn(SpriteBundle {
             sprite: Sprite {
                 color: Color::DARK_GRAY,
@@ -279,12 +307,46 @@ fn make_smithing_result(mut commands: Commands, cards: Query<(&SelectedCard, Ent
             .insert(Name::new("Button for spawning the stuff"));
         let card_1_entity = card_1_selector.id();
         card_1_selector.insert(On::<Pointer<Click>>::run(
-            move |mut player: ResMut<Player>, mut commands: Commands| {
+            move |mut player: ResMut<Player>,
+                  mut commands: Commands,
+                  mut next_state: ResMut<NextState<GameState>>| {
                 player.deck.push(card.clone());
                 commands.entity(card_1_entity).despawn_recursive();
+                next_state.set(GameState::Map);
             },
         ));
     }
+}
+
+fn remove_duplicate_effects(effects: Vec<Effect>) -> Vec<Effect> {
+    let mut effect_map: HashMap<Effect, i32> = HashMap::new();
+
+    for effect in effects {
+        match effect.clone() {
+            Effect::BonusDamage(val) => {
+                *effect_map.entry(Effect::BonusDamage(0)).or_insert(0) += val;
+            }
+            Effect::BonusHealth(val) => {
+                *effect_map.entry(Effect::BonusHealth(0)).or_insert(0) += val;
+            }
+            Effect::BonusCountdown(val) => {
+                *effect_map.entry(Effect::BonusCountdown(0)).or_insert(0) += val;
+            }
+            Effect::DealDamage(val) => {
+                *effect_map.entry(Effect::DealDamage(0)).or_insert(0) += val;
+            }
+        }
+    }
+
+    effect_map
+        .into_iter()
+        .map(|(effect, val)| match effect {
+            Effect::BonusDamage(_) => Effect::BonusDamage(val),
+            Effect::BonusHealth(_) => Effect::BonusHealth(val),
+            Effect::BonusCountdown(_) => Effect::BonusCountdown(val),
+            Effect::DealDamage(_) => Effect::DealDamage(val),
+        })
+        .collect()
 }
 
 fn button_system(

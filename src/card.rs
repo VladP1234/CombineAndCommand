@@ -1,6 +1,6 @@
 use bevy::{ecs::component::Component, reflect::Reflect};
 
-#[derive(Reflect, Clone, PartialEq, Debug)]
+#[derive(Reflect, Clone, PartialEq, Eq, Hash, Debug)]
 pub enum Effect {
     BonusDamage(i32),
     BonusHealth(i32),
