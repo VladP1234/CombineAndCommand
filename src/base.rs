@@ -18,7 +18,7 @@ impl Plugin for BasePlugin {
 struct BaseThing;
 
 #[derive(Event, Component, Clone)]
-enum BaseEvent {
+pub enum BaseEvent {
     LoadHomeScreen,
     LoadLeaderSelectionMenu,
     StartGame(Vec<Card>, Vec<(Unit, Attack)>),
@@ -254,7 +254,7 @@ fn base_event_manager(
             }
             BaseEvent::StartGame(deck, units) => {
                 commands.insert_resource(Player::new(deck.clone(), units.clone()));
-                next_state.set(GameState::Map);
+                next_state.set(GameState::GenerateMap);
             }
         }
     }

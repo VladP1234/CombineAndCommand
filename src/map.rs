@@ -11,7 +11,8 @@ pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Map), generate_map)
+        app.add_systems(OnEnter(GameState::GenerateMap), generate_map)
+            .add_systems(OnEnter(GameState::Map), make_map)
             .add_systems(
                 Update,
                 (scroll).distributive_run_if(in_state(GameState::Map)),
@@ -85,7 +86,7 @@ fn select_tile_type(floor: i32) -> GameState {
     if floor < 5 {
         let mut rng = thread_rng();
         let num: f64 = rng.gen();
-        if num > 0.8 {
+        if num > 0.6 {
             GameState::RestSite
         } else {
             GameState::Combat
@@ -95,28 +96,21 @@ fn select_tile_type(floor: i32) -> GameState {
     }
 }
 
-fn generate_map(
+fn generate_map(mut commands: Commands, mut next_state: ResMut<NextState<GameState>>) {
+    commands.insert_resource(MapManager {
+        map_data: Some(generate_map_data()),
+        current_tile: START_TILE,
+    });
+    next_state.set(GameState::Map);
+}
+
+fn make_map(
     mut commands: Commands,
-    opt_map_manager: Option<ResMut<MapManager>>,
+    map_manager: ResMut<MapManager>,
     asset_server: Res<AssetServer>,
 ) {
-    let map_data: HashMap<Tile, Vec<(i32, i32)>>;
-    let mut current_tile: (i32, i32) = START_TILE;
-    if let Some(mut map_manager) = opt_map_manager {
-        if let Some(data) = &map_manager.map_data {
-            map_data = data.clone();
-            current_tile = map_manager.current_tile;
-        } else {
-            map_data = generate_map_data();
-            map_manager.map_data = Some(map_data.clone())
-        }
-    } else {
-        map_data = generate_map_data();
-        commands.insert_resource(MapManager {
-            map_data: Some(map_data.clone()),
-            current_tile: START_TILE,
-        })
-    }
+    let map_data = map_manager.map_data.clone().unwrap();
+    let current_tile = map_manager.current_tile.clone();
 
     let mut generated_tiles: Vec<Tile> = Vec::new();
     for (end_tile, start_tiles) in map_data {

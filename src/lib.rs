@@ -16,6 +16,7 @@ pub use utils::*;
 pub enum GameState {
     #[default]
     HomeBase,
+    GenerateMap,
     Map,
     Combat,
     Merchant,

@@ -287,10 +287,16 @@ pub fn remove_dead_units(mut commands: Commands, units: Query<(&Unit, Entity)>) 
 pub fn end_combat(
     enemy_units: Query<Entity, (With<Unit>, Without<IsFriendly>)>,
     mut next_state: ResMut<NextState<GameState>>,
+    friendly_units: Query<Entity, (With<Unit>, With<IsFriendly>)>,
+    mut base_event_writer: EventWriter<BaseEvent>,
 ) {
     if enemy_units.is_empty() {
         next_state.set(GameState::Map);
     }
+    if friendly_units.is_empty() {
+        next_state.set(GameState::HomeBase)
+    }
+    base_event_writer.send(BaseEvent::LoadHomeScreen);
 }
 
 pub fn clean_up(mut commands: Commands, combat_things: Query<Entity, With<CombatThing>>) {
