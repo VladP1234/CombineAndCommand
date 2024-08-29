@@ -64,6 +64,7 @@ fn button_system(
     }
 }
 
+// The things on the home screen are created by this system
 fn base_event_manager(
     mut base_event_reader: EventReader<BaseEvent>,
     mut commands: Commands,
@@ -75,6 +76,7 @@ fn base_event_manager(
             commands.entity(thing).despawn_recursive();
         }
         match event {
+            // Makes the start game button, event occurs on startup or when the player is killed.
             BaseEvent::LoadHomeScreen => {
                 commands
                     .spawn(NodeBundle {
@@ -122,6 +124,7 @@ fn base_event_manager(
                             });
                     });
             }
+            // Event occurs when the start game button on the start screen is pressed
             BaseEvent::LoadLeaderSelectionMenu => {
                 commands
                     .spawn(NodeBundle {
@@ -136,6 +139,7 @@ fn base_event_manager(
                     })
                     .insert(BaseThing)
                     .with_children(|parent| {
+                        // The same deck is used for all leaders since I have no inscentive to make a unique one for each one and this is sufficient to demonstrate how the deck feature works
                         let mut deck: Vec<Card> = Vec::new();
                         deck.push(Card::new(Effect::BonusDamage(-2), 1));
                         deck.push(Card::new(Effect::BonusHealth(-2), 1));
@@ -148,12 +152,12 @@ fn base_event_manager(
                             vec![Effect::DealDamage(3), Effect::BonusHealth(6)],
                             1,
                         ));
-
+                        // Same goes for the units
                         let mut p_units: Vec<(Unit, Attack)> = Vec::new();
                         p_units.push((Unit::new(10, (0, 0)), Attack::new(4, 3)));
                         p_units.push((Unit::new(10, (0, 1)), Attack::new(9, 100)));
                         p_units.push((Unit::new(10, (1, 0)), Attack::new(6, 5)));
-
+                        // Makes the button for selecting the first leader
                         parent
                             .spawn(ButtonBundle {
                                 style: Style {
@@ -186,6 +190,7 @@ fn base_event_manager(
                                     },
                                 ));
                             });
+                        // Makes the button for selecting the second leader
                         parent
                             .spawn(ButtonBundle {
                                 style: Style {
@@ -218,6 +223,7 @@ fn base_event_manager(
                                     },
                                 ));
                             });
+                        // Makes the button for selecting the third leader
                         parent
                             .spawn(ButtonBundle {
                                 style: Style {
@@ -252,6 +258,7 @@ fn base_event_manager(
                             });
                     });
             }
+            // Evvent occurs when a leader is selected
             BaseEvent::StartGame(deck, units) => {
                 commands.insert_resource(Player::new(deck.clone(), units.clone()));
                 next_state.set(GameState::GenerateMap);
@@ -260,6 +267,7 @@ fn base_event_manager(
     }
 }
 
+// Occurs on startup
 fn setup(mut commands: Commands, mut base_event_writer: EventWriter<BaseEvent>) {
     commands.spawn(Camera2dBundle::default());
     base_event_writer.send(BaseEvent::LoadHomeScreen);

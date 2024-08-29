@@ -48,7 +48,7 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>, map_manager: Res
         .insert(Name::new("Hand Node"))
         .id();
 
-    commands.insert_resource(CombatManager::new(player.deck.clone(), 3, hand_node));
+    commands.insert_resource(CombatManager::new(player.deck.clone(), 999, hand_node)); // Unlimited energy bc I didn't implement implement any interaction with it
 
     commands
         .spawn(NodeBundle {
