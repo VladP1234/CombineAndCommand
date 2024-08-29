@@ -50,6 +50,7 @@ pub fn button_system(
                         end_of_turn_event_writer.send(EndOfTurnEvent);
                     }
                     CombatButtonType::Card(card_data) => {
+                        // I can unwrap because all cards are toggleable
                         if button_data.toggled.unwrap() {
                             if cb_manager.remaining_energy < card_data.cost {
                                 button_data.toggled = Some(!button_data.toggled.unwrap());
@@ -63,6 +64,7 @@ pub fn button_system(
                             cb_manager.selected_card = None
                         }
                     }
+                    // Executes the effect on a unit
                     CombatButtonType::UnitSelector(chosen_unit) => {
                         *color = Color::rgb(0.2, 0.8, 0.2).into();
                         for (mut unit, mut attack, entity) in units.iter_mut() {
@@ -129,6 +131,7 @@ pub fn button_system(
     }
 }
 
+// Spawns buttons on units whenever a card is selected
 pub fn spawn_button_on_unit(
     pos: &Transform,
     sprite: &Sprite,
@@ -196,7 +199,6 @@ pub fn provide_player_with_options_system(
     mut text_query: Query<&mut Text>,
 ) {
     let window = windows.single();
-    // debug!("w: {}, h: {}", window.width(), window.height());
     for event in card_events.read() {
         match event {
             CardEvent::CardSelected((selected_card, card_entity)) => {
@@ -223,6 +225,7 @@ pub fn provide_player_with_options_system(
                     spawn_button_on_unit(unit_pos, unit_sprite, entity, &mut commands, window)
                 }
             }
+            // opt_entity is Some only when a card is played
             CardEvent::CardDeselected(opt_entity) => {
                 for (button_entity, button_type) in action_prompt_buttons.iter() {
                     match button_type {
