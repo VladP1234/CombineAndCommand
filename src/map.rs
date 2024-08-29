@@ -58,8 +58,9 @@ This conlcudes the creating of 1 path. This process is repeated again, for the s
 The player starts at the start tile, so all paths are generated such that they end with the final node being the start tile
 This is done to enable the player to enter the game from their start tile
 
+I decided on this method because it was the simplest to implement and did it first try
 
-creating a Hshmap of StartTile: Tile, ConnectingLocations: Vec<(i32, i32)>
+
 This allows one tile to be connected to multiple other tiles
 */
 
@@ -143,6 +144,36 @@ For spawning the tiles, it is easier to work with a different layout because
 When a tile is spawned it is either active or inactive
 The activity state is determined by cycling through the start tiles and seeing if one of them matches the tile the player is currently on
 In the above example, when determining the activity status of tile A, the algorithm check whether the positions of tile B OR C match the player's current position (stored in the combat manager)
+
+Doing it the other way would be significantly less efficient due to the following scenario:
+                        +-----+ +-----+
+                        |  B  | |  C  |
+                        |     | |     |
+                        +-----+ +-----+
+                           \      /
+                            \    /
+                             \  /
+                              \/
+                            +-----+
+                            |  A  |
+                            |     |
+                            +-----+
+                              /\
+                             /  \
+                            /    \
+                           /      \
+                        +-----+ +-----+
+                        |  D  | |  E  |
+                        |     | |     |
+                        +-----+ +-----+
+Let's say that the player started at the bottom of the map and was going up.
+Two of the generated paths were D-A-C and E-A-B.
+Let's say that the player is on tile E
+At some point I will need to spawn tile A
+If I spawn tile A as a tile that is connected to tile D, then I wouldn't know to make it active since the player is not on tile D and therefore isn't connected to tile A.
+I could've had a second loop to check for all connections to the current tile, but that wouldn't be very efficient
+Instead, I reversed it, so with the player at B, when the game spawns A, it will check for all the tiles that A is connected to which, in this case, is B AND C.
+Since the player is at B, then A will be active.
 */
 
 fn make_map(
