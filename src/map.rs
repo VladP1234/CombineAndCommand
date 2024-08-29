@@ -106,7 +106,7 @@ fn select_tile_type(floor: i32) -> GameState {
     if floor < 5 {
         let mut rng = thread_rng();
         let num: f64 = rng.gen();
-        if num > 0.6 {
+        if num > 0.8 {
             GameState::RestSite
         } else {
             GameState::Combat
