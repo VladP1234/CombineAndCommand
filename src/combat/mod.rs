@@ -39,10 +39,6 @@ pub enum Turn {
     Enemy,
 }
 
-// enum CombatState {
-//     Fight,
-//     Reward,
-// }
 #[derive(Resource, Reflect)]
 pub struct CombatManager {
     turn: Turn,
@@ -114,7 +110,6 @@ pub struct Attack {
     pub attack_interval: i32,
     pub remaining_turns: i32,
     pub damage: i32,
-    // TODO: Damage Type
 }
 impl Attack {
     pub fn new(attack_interval: i32, damage: i32) -> Attack {
@@ -229,6 +224,7 @@ pub fn spawn_unit(commands: &mut Commands, unit: Unit, is_friendly: bool, attack
     }
 }
 
+// Makes the physical card that can be pressed to have its effect applied to an enemy
 pub fn make_card(commands: &mut Commands, card: &Card) -> Entity {
     let mut binding = commands.spawn(ButtonBundle {
         style: Style {
