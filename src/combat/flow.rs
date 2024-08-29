@@ -50,6 +50,7 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>, map_manager: Res
 
     commands.insert_resource(CombatManager::new(player.deck.clone(), 999, hand_node)); // Unlimited energy bc I didn't implement implement any interaction with it
 
+    // End turn button stuff
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -104,6 +105,7 @@ pub fn spawn_stuff(mut commands: Commands, player: Res<Player>, map_manager: Res
 }
 
 pub fn preflight(mut commands: Commands, mut cb_manager: ResMut<CombatManager>) {
+    // gives the palyer a starting hand
     for _ in 0..3 {
         let attempted_drawn_card = cb_manager.draw();
         if let Some(drawn_card) = attempted_drawn_card {
@@ -115,6 +117,7 @@ pub fn preflight(mut commands: Commands, mut cb_manager: ResMut<CombatManager>) 
     }
 }
 
+// Updates the (i32, i32) positions of each unit, shifting them towards battle as they approach each other, don't confuse with update_unit_ui() which moves the visual representations of units
 pub fn update_unit_pos(mut units: Query<(&mut Unit, Option<&IsFriendly>)>) {
     let mut friendlies: Vec<Mut<'_, Unit>> = Vec::new();
     let mut friendly_pos: Vec<(i32, i32)> = Vec::new();
@@ -157,6 +160,7 @@ fn move_unit(mut units: Vec<Mut<'_, Unit>>, mut positions: Vec<(i32, i32)>) {
     }
 }
 
+// Updates the visual representations of units as well as their visible stats
 pub fn update_unit_ui(
     mut units: Query<(
         &mut Transform,
@@ -198,6 +202,16 @@ pub fn update_unit_ui(
     }
 }
 
+// Resolves the attacks of various units
+pub fn deal_damage_system(
+    mut units: Query<(&mut Unit, &mut Attack, Entity, Option<&IsFriendly>)>,
+    // mut eot_events: EventReader<EndOfTurnEvent>,
+) {
+    process_attacks(&mut units, true);
+    process_attacks(&mut units, false);
+}
+
+// Damage happens simultaneously, so if the friendly units kill an enemy unit with a countdown of 0, the corpse still hits
 pub fn process_attacks(
     units: &mut Query<(&mut Unit, &mut Attack, Entity, Option<&IsFriendly>)>,
     friendlies_attacking: bool,
@@ -233,14 +247,7 @@ pub fn process_attacks(
     }
 }
 
-pub fn deal_damage_system(
-    mut units: Query<(&mut Unit, &mut Attack, Entity, Option<&IsFriendly>)>,
-    // mut eot_events: EventReader<EndOfTurnEvent>,
-) {
-    process_attacks(&mut units, true);
-    process_attacks(&mut units, false);
-}
-
+// Used an end of turn event, rather than button magic since I wanted the game backend to be centred on events
 pub fn handle_end_of_turn(
     mut friendly_untis: Query<&mut Attack, With<IsFriendly>>,
     mut enemy_units: Query<&mut Attack, Without<IsFriendly>>,
@@ -290,15 +297,18 @@ pub fn end_combat(
     friendly_units: Query<Entity, (With<Unit>, With<IsFriendly>)>,
     mut base_event_writer: EventWriter<BaseEvent>,
 ) {
+    // Returns the player to the map once all enemy units are killed
     if enemy_units.is_empty() {
         next_state.set(GameState::Map);
     }
-    if friendly_units.is_empty() {
-        next_state.set(GameState::HomeBase)
+    // Returns player to home base if all player units are killed
+    else if friendly_units.is_empty() {
+        next_state.set(GameState::HomeBase);
+        base_event_writer.send(BaseEvent::LoadHomeScreen);
     }
-    base_event_writer.send(BaseEvent::LoadHomeScreen);
 }
 
+// Removes all combat specific resources/entities once combat concludes
 pub fn clean_up(mut commands: Commands, combat_things: Query<Entity, With<CombatThing>>) {
     for combat_thing in &combat_things {
         commands.entity(combat_thing).despawn_recursive()
